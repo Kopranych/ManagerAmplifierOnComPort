@@ -6,8 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="testrxtx.view.UserInterfaceController">
    <children>
       <SplitPane dividerPositions="0.412751677852349" layoutX="50.0" layoutY="96.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -26,12 +25,12 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="УМ20" />
-                        <Label text="Предусилитель" GridPane.rowIndex="1" />
-                        <Label text="Аттенюатор 1, dB" GridPane.rowIndex="2" />
-                        <Label text="Аттенюатор 2, dB" GridPane.rowIndex="3" />
-                        <Label text="Напряжение, В" GridPane.rowIndex="4" />
-                        <Label text="Температура, С" GridPane.rowIndex="5" />
+                        <Label fx:id="amplifierLabel" text="Label" />
+                        <Label fx:id="preAmplifierLabel" text="Label" GridPane.rowIndex="1" />
+                        <Label fx:id="attenuatorOneLabel" text="Label" GridPane.rowIndex="2" />
+                        <Label fx:id="attenuatorTwoLabel" text="Label" GridPane.rowIndex="3" />
+                        <Label fx:id="temperatureLabel" text="Label" GridPane.rowIndex="4" />
+                        <Label fx:id="voltageLabel" text="Label" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
                </children>
@@ -49,7 +48,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" prefHeight="69.0" prefWidth="162.0" text="Вкл/Выкл" />
+                        <Button mnemonicParsing="false" onAction="#handleAmpEn" prefHeight="69.0" prefWidth="162.0" text="Вкл/Выкл" />
                         <Button mnemonicParsing="false" prefHeight="67.0" prefWidth="162.0" text="Вкл/Выкл" GridPane.rowIndex="1" />
                         <TextField prefHeight="25.0" prefWidth="158.0" promptText="от 0,5 до 31,5 dB" GridPane.rowIndex="2" />
                         <TextField promptText="от 0,5 до 31,5 dB" GridPane.rowIndex="3" />
