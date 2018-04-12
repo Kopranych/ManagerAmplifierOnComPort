@@ -6,9 +6,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="testrxtx.view.UserInterfaceController">
+<AnchorPane prefHeight="400.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="testrxtx.view.UserInterfaceController">
    <children>
-      <SplitPane dividerPositions="0.412751677852349" layoutX="50.0" layoutY="96.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <SplitPane dividerPositions="0.4161073825503356" layoutX="50.0" layoutY="96.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
@@ -48,10 +48,10 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleAmpEn" prefHeight="69.0" prefWidth="162.0" text="Вкл/Выкл" />
-                        <Button mnemonicParsing="false" prefHeight="67.0" prefWidth="162.0" text="Вкл/Выкл" GridPane.rowIndex="1" />
-                        <TextField prefHeight="25.0" prefWidth="158.0" promptText="от 0,5 до 31,5 dB" GridPane.rowIndex="2" />
-                        <TextField promptText="от 0,5 до 31,5 dB" GridPane.rowIndex="3" />
+                        <Button mnemonicParsing="false" onAction="#handleAmpEn" prefHeight="60.0" prefWidth="210.0" text="Вкл/Выкл" />
+                        <Button mnemonicParsing="false" onAction="#handlePreAmpEn" prefHeight="60.0" prefWidth="210.0" text="Вкл/Выкл" GridPane.rowIndex="1" />
+                        <TextField fx:id="attOneField" onAction="#handleSetAttenuatorOne" prefHeight="25.0" prefWidth="158.0" promptText="от 0.5 до 31.5 dB" GridPane.rowIndex="2" />
+                        <TextField fx:id="attTwoField" onAction="#handleSetAttenuatorTwo" promptText="от 0,5 до 31,5 dB" GridPane.rowIndex="3" />
                      </children>
                   </GridPane>
                   <Button layoutY="350.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="83.0" text="Установить" AnchorPane.bottomAnchor="13.0" AnchorPane.rightAnchor="89.0" />

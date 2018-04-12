@@ -2,10 +2,16 @@ package testrxtx.view;
 
 
 
+import java.util.regex.Pattern;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import testrxtx.MainRxTx;
@@ -28,6 +34,10 @@ public class UserInterfaceController {
 	private Label voltageLabel;
 	@FXML
 	private Label temperatureLabel;
+	@FXML
+	private TextField attOneField;
+	@FXML
+	private TextField attTwoField;
 
 	SerialPort port;
 
@@ -51,6 +61,9 @@ public class UserInterfaceController {
 		attenuatorTwoLabel.setText(ConstAmp.ATTENUATOR_TWO);
 		voltageLabel.setText(ConstAmp.VOLTAGE);
 		temperatureLabel.setText(ConstAmp.TEMPERATURE);
+		Pattern p = Pattern.compile("(\\d+\\.?\\d*)?");
+		attOneField.textProperty().addListener((observable, oldValue, newValue)->{
+			if(!p.matcher(newValue).matches())attOneField.setText(oldValue);});
 	}
 
 	/**
@@ -92,6 +105,83 @@ public class UserInterfaceController {
 		}
 			amplifierLabel.setText(ConstAmp.AMPLIFIER + " " + ConstAmp.OFF);
 		}
+	}
+
+	@FXML
+	private void handlePreAmpEn(){
+		if(!isPreAmplifier){
+			isPreAmplifier = true;
+			try {
+				port.writeString("*PreAmpEn%");
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			preAmplifierLabel.setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.ON);
+		}else{
+			isPreAmplifier = false;
+			try {
+				port.writeString("*PreAmpDis%");
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			preAmplifierLabel.setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.OFF);
+		}
+	}
+
+	/**
+	 * Обработка значений для первого аттенюатора
+	 * @param ae
+	 */
+	@FXML
+	private void handleSetAttenuatorOne(ActionEvent ae){
+		String tmp = attOneField.getText();
+		double tmpDouble = Double.parseDouble(tmp);
+		if((tmp.length() > ConstAmp.MAX_SIZE_STRING||(tmpDouble > ConstAmp.MAX_ATT))||
+				tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
+			attOneField.setText("");
+		}else{
+			try {
+				port.writeString("*PreAmpDis%");
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		}
+			attenuatorOneLabel.setText(ConstAmp.ATTENUATOR_ONE +
+					" " + attOneField.getText() + " " + ConstAmp.DECIBELL);
+			attOneField.setText("");
+		}
+	}
+
+	/**
+	 * Обработка поля значений второго аттенюатора
+	 * @param ae
+	 */
+
+	@FXML
+	private void handleSetAttenuatorTwo(ActionEvent ae){
+		String tmp = attOneField.getText();
+		double tmpDouble = Double.parseDouble(tmp);
+		if((tmp.length() > ConstAmp.MAX_SIZE_STRING||(tmpDouble > ConstAmp.MAX_ATT))||
+				tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
+			attTwoField.setText("");
+		}else{
+			try {
+				port.writeString("*PreAmpDis%");
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			attenuatorTwoLabel.setText(ConstAmp.ATTENUATOR_TWO +
+					" " + attTwoField.getText() + " " + ConstAmp.DECIBELL);
+			attOneField.setText("");
+		}
+	}
+
+	@FXML
+	private void handleSetAllSettings(){
+
 	}
 
 }
