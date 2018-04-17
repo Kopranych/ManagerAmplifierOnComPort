@@ -3,15 +3,11 @@ package testrxtx.view;
 
 
 import java.util.regex.Pattern;
-
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import jssc.SerialPort;
 import jssc.SerialPortException;
 import testrxtx.MainRxTx;
@@ -19,8 +15,8 @@ import testrxtx.model.ConstAmp;
 
 public class UserInterfaceController {
 
-	private boolean isAmplifier = false;
-	private boolean isPreAmplifier = false;
+	private String statusAmplifier = ConstAmp.AMP_OFF;
+	private String statusPreAmplifier = ConstAmp.PREAMP_OFF;
 
 	@FXML
 	private Label amplifierLabel;
@@ -38,6 +34,10 @@ public class UserInterfaceController {
 	private TextField attOneField;
 	@FXML
 	private TextField attTwoField;
+	@FXML
+	private Button buttomAmp;
+	@FXML
+	private Button buttomPreAmp;
 
 	SerialPort port;
 
@@ -61,9 +61,10 @@ public class UserInterfaceController {
 		attenuatorTwoLabel.setText(ConstAmp.ATTENUATOR_TWO);
 		voltageLabel.setText(ConstAmp.VOLTAGE);
 		temperatureLabel.setText(ConstAmp.TEMPERATURE);
-		Pattern p = Pattern.compile("(\\d+\\.?\\d*)?");
-		attOneField.textProperty().addListener((observable, oldValue, newValue)->{
-			if(!p.matcher(newValue).matches())attOneField.setText(oldValue);});
+		//Ограничение на ввод символов кроме цифр и точки
+		constrateEnterTextField(attOneField);
+		constrateEnterTextField(attTwoField);
+
 	}
 
 	/**
@@ -84,10 +85,10 @@ public class UserInterfaceController {
 	@FXML
 	private void handleAmpEn(){
 
-		if(!isAmplifier){
-			isAmplifier = true;
+		if(statusAmplifier.equals(ConstAmp.AMP_OFF)){
+			statusAmplifier = ConstAmp.AMP_ON;
 			try {
-				port.writeString("*1 20%");
+				port.writeString(ConstAmp.START_COM + ConstAmp.AMP_ON + ConstAmp.END_COM);
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -96,9 +97,9 @@ public class UserInterfaceController {
 			amplifierLabel.setText(ConstAmp.AMPLIFIER + " " + ConstAmp.ON);
 		}
 		else{
-			isAmplifier = false;
+			statusAmplifier = ConstAmp.AMP_OFF;
 		try {
-			port.writeString("*0 20%");
+			port.writeString(ConstAmp.START_COM + ConstAmp.AMP_OFF + ConstAmp.END_COM);
 		} catch (SerialPortException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -109,19 +110,19 @@ public class UserInterfaceController {
 
 	@FXML
 	private void handlePreAmpEn(){
-		if(!isPreAmplifier){
-			isPreAmplifier = true;
+		if(statusPreAmplifier.equals(ConstAmp.PREAMP_OFF)){
+			statusPreAmplifier = ConstAmp.PREAMP_ON;
 			try {
-				port.writeString("*PreAmpEn%");
+				port.writeString(ConstAmp.START_COM + ConstAmp.PREAMP_ON + ConstAmp.END_COM);
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			preAmplifierLabel.setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.ON);
 		}else{
-			isPreAmplifier = false;
+			statusPreAmplifier = ConstAmp.PREAMP_OFF;
 			try {
-				port.writeString("*PreAmpDis%");
+				port.writeString(ConstAmp.START_COM + ConstAmp.PREAMP_OFF + ConstAmp.END_COM);
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -136,14 +137,15 @@ public class UserInterfaceController {
 	 */
 	@FXML
 	private void handleSetAttenuatorOne(ActionEvent ae){
+		ae.
 		String tmp = attOneField.getText();
 		double tmpDouble = Double.parseDouble(tmp);
-		if((tmp.length() > ConstAmp.MAX_SIZE_STRING||(tmpDouble > ConstAmp.MAX_ATT))||
-				tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
+		if(tmpDouble > ConstAmp.MAX_ATT||tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
 			attOneField.setText("");
 		}else{
 			try {
-				port.writeString("*PreAmpDis%");
+				port.writeString(ConstAmp.START_COM + "3 " + attOneField.getText()
+				+ ConstAmp.END_COM);
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -161,27 +163,35 @@ public class UserInterfaceController {
 
 	@FXML
 	private void handleSetAttenuatorTwo(ActionEvent ae){
-		String tmp = attOneField.getText();
+		String tmp = attTwoField.getText();
 		double tmpDouble = Double.parseDouble(tmp);
-		if((tmp.length() > ConstAmp.MAX_SIZE_STRING||(tmpDouble > ConstAmp.MAX_ATT))||
-				tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
+		if(tmpDouble > ConstAmp.MAX_ATT||tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
 			attTwoField.setText("");
 		}else{
 			try {
-				port.writeString("*PreAmpDis%");
+				port.writeString(ConstAmp.START_COM + "4 " + attTwoField.getText()
+				+ ConstAmp.END_COM);
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			attenuatorTwoLabel.setText(ConstAmp.ATTENUATOR_TWO +
 					" " + attTwoField.getText() + " " + ConstAmp.DECIBELL);
-			attOneField.setText("");
+			attTwoField.setText("");
 		}
 	}
 
 	@FXML
 	private void handleSetAllSettings(){
-
+		String transivCommand = ConstAmp.START_COM + ConstAmp.ALL_SET
+				+ "|" + statusAmplifier + "|" + "%";
 	}
 
+	//Ограничение на ввод символов кроме цифр и точки
+	private void constrateEnterTextField(TextField attField){
+		Pattern p = Pattern.compile("(\\d+\\.?\\d*)?");
+		attField.textProperty().addListener((observable, oldValue, newValue)->{
+			if(!p.matcher(newValue).matches())attField.setText(oldValue);});
+
+	}
 }

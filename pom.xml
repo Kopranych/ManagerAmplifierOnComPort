@@ -19,5 +19,10 @@
     	<artifactId>jssc</artifactId>
     	<version>2.8.0</version>
     </dependency>
+    <dependency>
+    	<groupId>com.zenjava</groupId>
+    	<artifactId>javafx-maven-plugin</artifactId>
+    	<version>8.8.2</version>
+	</dependency>
   </dependencies>
 </project>

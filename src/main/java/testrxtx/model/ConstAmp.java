@@ -17,4 +17,12 @@ public class ConstAmp {
 	public static final double STEP_ATT = 0.5;
 	public static final double MAX_ATT = 31.5;
 	public static final double MAX_SIZE_STRING = 4;
+	//команда управления устройством
+	public static final String AMP_ON = "1 1";
+	public static final String AMP_OFF = "1 0";
+	public static final String PREAMP_ON = "2 1";
+	public static final String PREAMP_OFF = "2 0";
+	public static final String START_COM = "*";
+	public static final String END_COM = "%";
+	public static final String ALL_SET = "0";
 }
