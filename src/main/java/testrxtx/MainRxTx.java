@@ -18,6 +18,7 @@ public class MainRxTx extends Application {
 
 	private Stage primaryStage;
 	private BorderPane rootLayout;
+	private UserInterfaceController controller;
 	SerialPort comPort = new SerialPort("COM1");
 
 	@Override
@@ -72,7 +73,7 @@ public class MainRxTx extends Application {
 			// Помещаем интерфейс в центр корневого макета.
 			rootLayout.setCenter(userInterface);
 			// Даём контроллеру доступ к главному приложению.
-	        UserInterfaceController controller = loader.getController();
+	        controller = loader.getController();
 	        controller.setMainApp(this);
 	        controller.setPort(comPort);
 
@@ -83,8 +84,6 @@ public class MainRxTx extends Application {
 	}
 
 	public void initComPort(){
-
-
 		try {
 
 			comPort.openPort();
@@ -93,7 +92,7 @@ public class MainRxTx extends Application {
                 SerialPort.STOPBITS_1,
                 SerialPort.PARITY_NONE);
 			comPort.setEventsMask(SerialPort.MASK_RXCHAR);
-			comPort.addEventListener(new SerialReader(comPort));
+			comPort.addEventListener(new SerialReader(comPort, controller));
 
 		} catch (SerialPortException e) {
 			// TODO Auto-generated catch block

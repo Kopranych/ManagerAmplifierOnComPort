@@ -46,6 +46,27 @@ public class UserInterfaceController {
 	}
 
 
+	public Label getAmplifierLabel() {
+		return amplifierLabel;
+	}
+
+	public Label getAttenuatorOneLabel() {
+		return attenuatorOneLabel;
+	}
+
+	public Label getAttenuatorTwoLabel() {
+		return attenuatorTwoLabel;
+	}
+
+	public TextField getAttOneField() {
+		return attOneField;
+	}
+
+	public TextField getAttTwoField() {
+		return attTwoField;
+	}
+
+
 	// —сылка на главное приложение.
     private MainRxTx mainApp;
 
@@ -137,7 +158,6 @@ public class UserInterfaceController {
 	 */
 	@FXML
 	private void handleSetAttenuatorOne(ActionEvent ae){
-		ae.
 		String tmp = attOneField.getText();
 		double tmpDouble = Double.parseDouble(tmp);
 		if(tmpDouble > ConstAmp.MAX_ATT||tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
@@ -184,7 +204,25 @@ public class UserInterfaceController {
 	@FXML
 	private void handleSetAllSettings(){
 		String transivCommand = ConstAmp.START_COM + ConstAmp.ALL_SET
-				+ "|" + statusAmplifier + "|" + "%";
+				+ "|" + statusAmplifier + "|" + statusPreAmplifier + "|" + "3 " + attOneField.getText() +
+				"|" + "4 " + attTwoField.getText() + ConstAmp.END_COM;
+		try {
+			port.writeString(transivCommand);
+		} catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@FXML
+	private void handleReadDevice(){
+		try {
+			port.writeString(ConstAmp.START_COM + ConstAmp.READ_DEVICE + ConstAmp.END_COM);
+		} catch (SerialPortException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	//ќграничение на ввод символов кроме цифр и точки

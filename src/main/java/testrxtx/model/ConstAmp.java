@@ -25,4 +25,5 @@ public class ConstAmp {
 	public static final String START_COM = "*";
 	public static final String END_COM = "%";
 	public static final String ALL_SET = "0";
+	public static final String READ_DEVICE = "5";
 }
