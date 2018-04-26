@@ -15,8 +15,8 @@ import testrxtx.model.ConstAmp;
 
 public class UserInterfaceController {
 
-	private String statusAmplifier = ConstAmp.AMP_OFF;
-	private String statusPreAmplifier = ConstAmp.PREAMP_OFF;
+	private String statusAmplifier = ConstAmp.getAmpOff();
+	private String statusPreAmplifier = ConstAmp.getPreampOff();
 
 	@FXML
 	private Label amplifierLabel;
@@ -45,10 +45,14 @@ public class UserInterfaceController {
 		this.port = port;
 	}
 
-
 	public Label getAmplifierLabel() {
 		return amplifierLabel;
 	}
+
+	public Label getPreAmplifierLabel() {
+		return preAmplifierLabel;
+	}
+
 
 	public Label getAttenuatorOneLabel() {
 		return attenuatorOneLabel;
@@ -58,13 +62,15 @@ public class UserInterfaceController {
 		return attenuatorTwoLabel;
 	}
 
-	public TextField getAttOneField() {
-		return attOneField;
+	public Label getVoltageLabel() {
+		return voltageLabel;
 	}
 
-	public TextField getAttTwoField() {
-		return attTwoField;
+	public Label getTemperatureLabel() {
+		return temperatureLabel;
 	}
+
+
 
 
 	// —сылка на главное приложение.
@@ -115,17 +121,17 @@ public class UserInterfaceController {
 				e.printStackTrace();
 			}
 
-			amplifierLabel.setText(ConstAmp.AMPLIFIER + " " + ConstAmp.ON);
+//			amplifierLabel.setText(ConstAmp.AMPLIFIER + " " + ConstAmp.ON);
 		}
 		else{
 			statusAmplifier = ConstAmp.AMP_OFF;
-		try {
-			port.writeString(ConstAmp.START_COM + ConstAmp.AMP_OFF + ConstAmp.END_COM);
-		} catch (SerialPortException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			amplifierLabel.setText(ConstAmp.AMPLIFIER + " " + ConstAmp.OFF);
+			try {
+				port.writeString(ConstAmp.START_COM + ConstAmp.AMP_OFF + ConstAmp.END_COM);
+			} catch (SerialPortException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+//			amplifierLabel.setText(ConstAmp.AMPLIFIER + " " + ConstAmp.OFF);
 		}
 	}
 
@@ -164,7 +170,7 @@ public class UserInterfaceController {
 			attOneField.setText("");
 		}else{
 			try {
-				port.writeString(ConstAmp.START_COM + "3 " + attOneField.getText()
+				port.writeString(ConstAmp.START_COM + "3|" + attOneField.getText()
 				+ ConstAmp.END_COM);
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
@@ -189,7 +195,7 @@ public class UserInterfaceController {
 			attTwoField.setText("");
 		}else{
 			try {
-				port.writeString(ConstAmp.START_COM + "4 " + attTwoField.getText()
+				port.writeString(ConstAmp.START_COM + "4|" + attTwoField.getText()
 				+ ConstAmp.END_COM);
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block

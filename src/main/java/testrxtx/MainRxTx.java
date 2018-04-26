@@ -87,7 +87,7 @@ public class MainRxTx extends Application {
 		try {
 
 			comPort.openPort();
-			comPort.setParams(SerialPort.BAUDRATE_115200,
+			comPort.setParams(SerialPort.BAUDRATE_9600,
                 SerialPort.DATABITS_8,
                 SerialPort.STOPBITS_1,
                 SerialPort.PARITY_NONE);
@@ -99,6 +99,7 @@ public class MainRxTx extends Application {
 			e.printStackTrace();
 		}
 	}
+
 
 }
 

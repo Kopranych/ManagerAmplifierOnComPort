@@ -1,15 +1,20 @@
 package testrxtx.control;
 
+import javafx.application.Platform;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
 import jssc.SerialPortEventListener;
 import jssc.SerialPortException;
+import testrxtx.model.ConstAmp;
 import testrxtx.view.UserInterfaceController;
 
 public class SerialReader implements SerialPortEventListener{
 
 	private SerialPort port;
 	private UserInterfaceController uiController;
+	private boolean isRecieve = false;
+	private String recieverString;
+	private char comReciever;
 
 	public SerialReader(SerialPort port){
 		this.port = port;
@@ -21,36 +26,73 @@ public class SerialReader implements SerialPortEventListener{
 
 	}
 
+	/**
+	 * принимает событие от порта и обрабатывает их
+	 */
 	@Override
 	public void serialEvent(SerialPortEvent serialPortEvent) {
 		if(serialPortEvent.isRXCHAR()){
 			try {
-				System.out.print(port.readString(serialPortEvent.getEventValue()));
-				String recieverString = port.readString(serialPortEvent.getEventValue());
-				char comReciever = recieverString.charAt(0);
-				switch(comReciever){
-					case '0':
-						String[] bufRead = recieverString.split("|");
-						int size = bufRead.length;
-						uiController.getAmplifierLabel().setText(bufRead[0]);
-
-						break;
-					case '1':
-						break;
-					case '2':
-						break;
-					case '3':
-						break;
-					case '4':
-						break;
-
-				}
-
+				recieverString = port.readString(serialPortEvent.getEventValue());
+				System.out.println(recieverString);
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+				Platform.runLater(() -> {
+					comReciever = recieverString.charAt(0);
+					System.out.println(comReciever);
+					String[] bufRead = recieverString.split("|");
+					switch(comReciever){
+					case '0':
+						int size = bufRead.length;
+
+						if(bufRead[2].equals("1")){
+							uiController.getPreAmplifierLabel().setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.ON);
+						}else{
+							uiController.getPreAmplifierLabel().setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.OFF);
+						}
+
+						uiController.getAttenuatorOneLabel().setText(ConstAmp.ATTENUATOR_ONE +
+								" " + bufRead[3] + " " + ConstAmp.DECIBELL);
+						uiController.getAttenuatorTwoLabel().setText(ConstAmp.ATTENUATOR_TWO +
+								" " + bufRead[4] + " " + ConstAmp.DECIBELL);
+						uiController.getVoltageLabel().setText(ConstAmp.VOLTAGE + " " + bufRead[5]);
+						uiController.getTemperatureLabel().setText(ConstAmp.TEMPERATURE + " " + bufRead[6]);
+						break;
+					case '1':
+						if(bufRead[2].equals("1")){
+							uiController.getAmplifierLabel().setText(ConstAmp.AMPLIFIER + " " + ConstAmp.ON);
+						}else{
+							uiController.getAmplifierLabel().setText(ConstAmp.AMPLIFIER + " " + ConstAmp.OFF);
+						}
+						break;
+					case '2':
+						if(bufRead[1].equals("1")){
+							uiController.getPreAmplifierLabel().setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.ON);
+						}else{
+							uiController.getPreAmplifierLabel().setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.OFF);
+						}
+						break;
+					case '3':
+						uiController.getAttenuatorOneLabel().setText(ConstAmp.ATTENUATOR_ONE +
+								" " + bufRead[1] + " " + ConstAmp.DECIBELL);
+						break;
+					case '4':
+						uiController.getAttenuatorTwoLabel().setText(ConstAmp.ATTENUATOR_TWO +
+								" " + bufRead[1] + " " + ConstAmp.DECIBELL);
+						break;
+					case '5':
+						uiController.getVoltageLabel().setText(ConstAmp.VOLTAGE + " " + bufRead[1]);
+						break;
+					case '6':
+						uiController.getTemperatureLabel().setText(ConstAmp.TEMPERATURE + " " + bufRead[1]);
+					default:
+						System.out.println("Uncknown command");
+					}
+				});
+
 
 	}
 
@@ -62,5 +104,7 @@ public class SerialReader implements SerialPortEventListener{
 	public void setPort(SerialPort port) {
 		this.port = port;
 	}
+
+
 
 }
