@@ -1,3 +1,6 @@
+/*
+ * Класс хранит основные константы приложения
+ */
 package testrxtx.model;
 
 public class ConstAmp {
@@ -18,12 +21,12 @@ public class ConstAmp {
 	private static final double MAX_ATT = 31.5;
 	private static final double MAX_SIZE_STRING = 4;
 	//команда управления устройством
+	private static final String START_COM = "*";
+	private static final String END_COM = "%";
 	private static final String AMP_ON = "1|1";
 	private static final String AMP_OFF = "1|0";
 	private static final String PREAMP_ON = "2|1";
 	private static final String PREAMP_OFF = "2|0";
-	private static final String START_COM = "*";
-	private static final String END_COM = "%";
 	private static final String ALL_SET = "0";
 	private static final String READ_DEVICE = "5";
 
@@ -31,16 +34,14 @@ public class ConstAmp {
 
 	private ConstAmp(){}
 
-	public ConstAmp instance(){
-		if(constAmp != null){
-			return constAmp;
+	public static synchronized ConstAmp instance(){
+		if(constAmp == null){
+			constAmp = new ConstAmp();
 		}
-		return constAmp = new ConstAmp();
-	}
-
-	public static ConstAmp getConstAmp() {
 		return constAmp;
 	}
+
+
 
 	public static void setConstAmp(ConstAmp constAmp) {
 		ConstAmp.constAmp = constAmp;

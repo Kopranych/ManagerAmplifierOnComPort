@@ -1,5 +1,7 @@
 package testrxtx.view;
-
+/*
+ * Класс контроллер для обработки событий интерфейса
+ */
 
 
 import java.util.regex.Pattern;
@@ -39,7 +41,8 @@ public class UserInterfaceController {
 	@FXML
 	private Button buttomPreAmp;
 
-	SerialPort port;
+	public SerialPort port;
+	public ConstAmp constAmp;
 
 	public void setPort(SerialPort port){
 		this.port = port;
@@ -82,12 +85,12 @@ public class UserInterfaceController {
      */
 	@FXML
     private void initialize() {
-		amplifierLabel.setText(ConstAmp.AMPLIFIER);
-		preAmplifierLabel.setText(ConstAmp.PREAMPLIFIER);
-		attenuatorOneLabel.setText(ConstAmp.ATTENUATOR_ONE);
-		attenuatorTwoLabel.setText(ConstAmp.ATTENUATOR_TWO);
-		voltageLabel.setText(ConstAmp.VOLTAGE);
-		temperatureLabel.setText(ConstAmp.TEMPERATURE);
+		amplifierLabel.setText(ConstAmp.getAmplifier());
+		preAmplifierLabel.setText(ConstAmp.getPreamplifier());
+		attenuatorOneLabel.setText(ConstAmp.getAttenuatorOne());
+		attenuatorTwoLabel.setText(ConstAmp.getAttenuatorTwo());
+		voltageLabel.setText(ConstAmp.getVoltage());
+		temperatureLabel.setText(ConstAmp.getTemperature());
 		//Ограничение на ввод символов кроме цифр и точки
 		constrateEnterTextField(attOneField);
 		constrateEnterTextField(attTwoField);
@@ -106,55 +109,61 @@ public class UserInterfaceController {
 //        userTable.setItems(mainApp.getListUser());
     }
 
-	/**
-	 * метод вызывается при нажатии кнопки включения усилителя.
+    /**
+	 * метод вызывается при нажатии кнопки включения усилителя
+	 * и отправляет команду через ком порт на микроконтроллер
+	 * для управления усилителем
 	 */
 	@FXML
 	private void handleAmpEn(){
 
-		if(statusAmplifier.equals(ConstAmp.AMP_OFF)){
-			statusAmplifier = ConstAmp.AMP_ON;
+		if(statusAmplifier.equals(ConstAmp.getAmpOff())){
+			statusAmplifier = ConstAmp.getAmpOn();
 			try {
-				port.writeString(ConstAmp.START_COM + ConstAmp.AMP_ON + ConstAmp.END_COM);
+				port.writeString(ConstAmp.getStartCom() + ConstAmp.getAmpOn() + ConstAmp.getEndCom());
 			} catch (SerialPortException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-//			amplifierLabel.setText(ConstAmp.AMPLIFIER + " " + ConstAmp.ON);
+			amplifierLabel.setText(ConstAmp.getAmplifier() + " " + ConstAmp.getOn());
 		}
 		else{
-			statusAmplifier = ConstAmp.AMP_OFF;
+			statusAmplifier = ConstAmp.getAmpOff();
 			try {
-				port.writeString(ConstAmp.START_COM + ConstAmp.AMP_OFF + ConstAmp.END_COM);
+				port.writeString(ConstAmp.getStartCom() + ConstAmp.getAmpOff() + ConstAmp.getEndCom());
 			} catch (SerialPortException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
-//			amplifierLabel.setText(ConstAmp.AMPLIFIER + " " + ConstAmp.OFF);
+			amplifierLabel.setText(ConstAmp.getAmplifier() + " " + ConstAmp.getOff());
 		}
 	}
 
+	/**
+	 * метод вызывается при нажатии кнопки включения предусилителя
+	 * и отправляет команду через ком порт на микроконтроллер
+	 * для управления предусилителем
+	 */
 	@FXML
 	private void handlePreAmpEn(){
-		if(statusPreAmplifier.equals(ConstAmp.PREAMP_OFF)){
-			statusPreAmplifier = ConstAmp.PREAMP_ON;
+		if(statusPreAmplifier.equals(ConstAmp.getPreampOff())){
+			statusPreAmplifier = ConstAmp.getPreampOn();
 			try {
-				port.writeString(ConstAmp.START_COM + ConstAmp.PREAMP_ON + ConstAmp.END_COM);
+				port.writeString(ConstAmp.getStartCom() + ConstAmp.getPreampOn() + ConstAmp.getEndCom());
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			preAmplifierLabel.setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.ON);
+			preAmplifierLabel.setText(ConstAmp.getPreamplifier() + " " + ConstAmp.getOn());
 		}else{
-			statusPreAmplifier = ConstAmp.PREAMP_OFF;
+			statusPreAmplifier = ConstAmp.getPreampOff();
 			try {
-				port.writeString(ConstAmp.START_COM + ConstAmp.PREAMP_OFF + ConstAmp.END_COM);
+				port.writeString(ConstAmp.getStartCom() + ConstAmp.getPreampOff() + ConstAmp.getEndCom());
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			preAmplifierLabel.setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.OFF);
+			preAmplifierLabel.setText(ConstAmp.getPreamplifier() + " " + ConstAmp.getOff());
 		}
 	}
 
@@ -166,18 +175,18 @@ public class UserInterfaceController {
 	private void handleSetAttenuatorOne(ActionEvent ae){
 		String tmp = attOneField.getText();
 		double tmpDouble = Double.parseDouble(tmp);
-		if(tmpDouble > ConstAmp.MAX_ATT||tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
+		if(tmpDouble > ConstAmp.getMaxAtt()||tmpDouble%ConstAmp.getStepAtt() != 0){//проверка введенных данных на соответсвие допустимых значений
 			attOneField.setText("");
 		}else{
 			try {
-				port.writeString(ConstAmp.START_COM + "3|" + attOneField.getText()
-				+ ConstAmp.END_COM);
+				port.writeString(ConstAmp.getStartCom() + "3|" + attOneField.getText()
+				+ ConstAmp.getEndCom());
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 		}
-			attenuatorOneLabel.setText(ConstAmp.ATTENUATOR_ONE +
-					" " + attOneField.getText() + " " + ConstAmp.DECIBELL);
+			attenuatorOneLabel.setText(ConstAmp.getAttenuatorOne() +
+					" " + attOneField.getText() + " " + ConstAmp.getDecibell());
 			attOneField.setText("");
 		}
 	}
@@ -191,27 +200,32 @@ public class UserInterfaceController {
 	private void handleSetAttenuatorTwo(ActionEvent ae){
 		String tmp = attTwoField.getText();
 		double tmpDouble = Double.parseDouble(tmp);
-		if(tmpDouble > ConstAmp.MAX_ATT||tmpDouble%ConstAmp.STEP_ATT != 0){//проверка введенных данных на соответсвие допустимых значений
+		if(tmpDouble > ConstAmp.getMaxAtt()||tmpDouble%ConstAmp.getStepAtt() != 0){//проверка введенных данных на соответсвие допустимых значений
 			attTwoField.setText("");
 		}else{
 			try {
-				port.writeString(ConstAmp.START_COM + "4|" + attTwoField.getText()
-				+ ConstAmp.END_COM);
+				port.writeString(ConstAmp.getStartCom() + "4|" + attTwoField.getText()
+				+ ConstAmp.getEndCom());
 			} catch (SerialPortException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			attenuatorTwoLabel.setText(ConstAmp.ATTENUATOR_TWO +
-					" " + attTwoField.getText() + " " + ConstAmp.DECIBELL);
+			attenuatorTwoLabel.setText(ConstAmp.getAttenuatorTwo() +
+					" " + attTwoField.getText() + " " + ConstAmp.getDecibell());
 			attTwoField.setText("");
 		}
 	}
 
+	/**
+	 * метод вызывается при нажатии кнопки "установить"
+	 * и отправляет команду через ком порт на микроконтроллер
+	 * для установки настроек для всей доступной переферии устройства
+	 */
 	@FXML
 	private void handleSetAllSettings(){
-		String transivCommand = ConstAmp.START_COM + ConstAmp.ALL_SET
+		String transivCommand = ConstAmp.getStartCom() + ConstAmp.getAllSet()
 				+ "|" + statusAmplifier + "|" + statusPreAmplifier + "|" + "3 " + attOneField.getText() +
-				"|" + "4 " + attTwoField.getText() + ConstAmp.END_COM;
+				"|" + "4 " + attTwoField.getText() + ConstAmp.getEndCom();
 		try {
 			port.writeString(transivCommand);
 		} catch (SerialPortException e) {
@@ -221,10 +235,15 @@ public class UserInterfaceController {
 
 	}
 
+	/*
+	 * метод вызывается при нажатии кнопки "обновить"
+	 * и отправляет команду микроконтроллеру для чтения актуальных установок
+	 * переферии и данных датчика температуры и уровня напряжения на усилителе
+	 */
 	@FXML
 	private void handleReadDevice(){
 		try {
-			port.writeString(ConstAmp.START_COM + ConstAmp.READ_DEVICE + ConstAmp.END_COM);
+			port.writeString(ConstAmp.getStartCom() + ConstAmp.getReadDevice() + ConstAmp.getEndCom());
 		} catch (SerialPortException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

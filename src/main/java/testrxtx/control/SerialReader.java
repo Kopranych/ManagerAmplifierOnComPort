@@ -1,5 +1,7 @@
 package testrxtx.control;
-
+/*
+ * Класс для работы с com портом
+ */
 import javafx.application.Platform;
 import jssc.SerialPort;
 import jssc.SerialPortEvent;
@@ -49,45 +51,45 @@ public class SerialReader implements SerialPortEventListener{
 						int size = bufRead.length;
 
 						if(bufRead[2].equals("1")){
-							uiController.getPreAmplifierLabel().setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.ON);
+							uiController.getPreAmplifierLabel().setText(ConstAmp.getPreamplifier() + " " + ConstAmp.getOn());
 						}else{
-							uiController.getPreAmplifierLabel().setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.OFF);
+							uiController.getPreAmplifierLabel().setText(ConstAmp.getPreamplifier() + " " + ConstAmp.getOff());
 						}
 
-						uiController.getAttenuatorOneLabel().setText(ConstAmp.ATTENUATOR_ONE +
-								" " + bufRead[3] + " " + ConstAmp.DECIBELL);
-						uiController.getAttenuatorTwoLabel().setText(ConstAmp.ATTENUATOR_TWO +
-								" " + bufRead[4] + " " + ConstAmp.DECIBELL);
-						uiController.getVoltageLabel().setText(ConstAmp.VOLTAGE + " " + bufRead[5]);
-						uiController.getTemperatureLabel().setText(ConstAmp.TEMPERATURE + " " + bufRead[6]);
+						uiController.getAttenuatorOneLabel().setText(ConstAmp.getAttenuatorOne() +
+								" " + bufRead[3] + " " + ConstAmp.getDecibell());
+						uiController.getAttenuatorTwoLabel().setText(ConstAmp.getAttenuatorTwo() +
+								" " + bufRead[4] + " " + ConstAmp.getDecibell());
+						uiController.getVoltageLabel().setText(ConstAmp.getVoltage() + " " + bufRead[5]);
+						uiController.getTemperatureLabel().setText(ConstAmp.getTemperature() + " " + bufRead[6]);
 						break;
 					case '1':
 						if(bufRead[2].equals("1")){
-							uiController.getAmplifierLabel().setText(ConstAmp.AMPLIFIER + " " + ConstAmp.ON);
+							uiController.getAmplifierLabel().setText(ConstAmp.getAmplifier() + " " + ConstAmp.getOn());
 						}else{
-							uiController.getAmplifierLabel().setText(ConstAmp.AMPLIFIER + " " + ConstAmp.OFF);
+							uiController.getAmplifierLabel().setText(ConstAmp.getAmplifier() + " " + ConstAmp.getOff());
 						}
 						break;
 					case '2':
 						if(bufRead[1].equals("1")){
-							uiController.getPreAmplifierLabel().setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.ON);
+							uiController.getPreAmplifierLabel().setText(ConstAmp.getPreamplifier() + " " + ConstAmp.getOn());
 						}else{
-							uiController.getPreAmplifierLabel().setText(ConstAmp.PREAMPLIFIER + " " + ConstAmp.OFF);
+							uiController.getPreAmplifierLabel().setText(ConstAmp.getPreamplifier() + " " + ConstAmp.getOff());
 						}
 						break;
 					case '3':
-						uiController.getAttenuatorOneLabel().setText(ConstAmp.ATTENUATOR_ONE +
-								" " + bufRead[1] + " " + ConstAmp.DECIBELL);
+						uiController.getAttenuatorOneLabel().setText(ConstAmp.getAttenuatorOne() +
+								" " + bufRead[1] + " " + ConstAmp.getDecibell());
 						break;
 					case '4':
-						uiController.getAttenuatorTwoLabel().setText(ConstAmp.ATTENUATOR_TWO +
-								" " + bufRead[1] + " " + ConstAmp.DECIBELL);
+						uiController.getAttenuatorTwoLabel().setText(ConstAmp.getAttenuatorTwo() +
+								" " + bufRead[1] + " " + ConstAmp.getDecibell());
 						break;
 					case '5':
-						uiController.getVoltageLabel().setText(ConstAmp.VOLTAGE + " " + bufRead[1]);
+						uiController.getVoltageLabel().setText(ConstAmp.getVoltage() + " " + bufRead[1]);
 						break;
 					case '6':
-						uiController.getTemperatureLabel().setText(ConstAmp.TEMPERATURE + " " + bufRead[1]);
+						uiController.getTemperatureLabel().setText(ConstAmp.getTemperature() + " " + bufRead[1]);
 					default:
 						System.out.println("Uncknown command");
 					}

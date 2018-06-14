@@ -1,7 +1,13 @@
+/*
+ * Основной класс JavaFX приложения, основная разметка эдементов интерфейса
+ * выполнена через файлы fxml: RootLayout, UserInterface. Так же в приложении
+ * используется библиотека jssc для работы с com портом класс SerialReader.java
+ */
 package testrxtx;
 
 import java.io.IOException;
-
+import java.util.Collection;
+import java.util.HashMap;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +17,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import jssc.SerialPort;
 import jssc.SerialPortException;
+import jssc.SerialPortList;
 import testrxtx.control.SerialReader;
 import testrxtx.view.UserInterfaceController;
 
@@ -19,8 +26,15 @@ public class MainRxTx extends Application {
 	private Stage primaryStage;
 	private BorderPane rootLayout;
 	private UserInterfaceController controller;
-	SerialPort comPort = new SerialPort("COM1");
+	private SerialPort comPort = new SerialPort("COM1");//в дальнейшем планировал исполльзовать метод SerialPortList.getPortNames() для возможности выбора необходимого порта
 
+
+	public static void main(String[] args) {
+		launch(args);//вызывает метод start()
+
+	}
+
+	//основной метод выполнения
 	@Override
 	public void start(Stage primaryStage) {
 		this.primaryStage = primaryStage;
@@ -30,22 +44,23 @@ public class MainRxTx extends Application {
 		showUserInterface();
 		initComPort();
 
+
 	}
 
+	//метод вызывается при закрытии основного окна приложения
+	//и закрывает соединение с comport
 	@Override
 	public void stop(){
 		try {
 			comPort.closePort();
 		} catch (SerialPortException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 	}
 
-	public static void main(String[] args) {
-		launch(args);
-	}
 
+	//инициализация корневого макета отображения
 	public void initRootLayout(){
 		try{
 			// Загружаем корневой макет из fxml файла.
@@ -64,6 +79,7 @@ public class MainRxTx extends Application {
 
 	}
 
+	//добавление основных элементов интерфейса в корневой макет
 	public void showUserInterface(){
 		try{
 			//Загружаем интерфейс из fxml файла
@@ -83,6 +99,7 @@ public class MainRxTx extends Application {
 
 	}
 
+	//инициализация com порта
 	public void initComPort(){
 		try {
 
